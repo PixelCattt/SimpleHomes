@@ -137,7 +137,6 @@ public class SimpleHomes extends JavaPlugin {
 
                 if (response.statusCode() == 200) {
                     JSONArray jsonArray = new JSONArray(response.body());
-                    System.out.println(jsonArray.toString());
                     if (!jsonArray.isEmpty()) {
                         JSONObject latestVersion = jsonArray.getJSONObject(0);
                         return latestVersion.getString("version_number");

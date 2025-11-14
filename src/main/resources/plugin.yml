@@ -6,27 +6,79 @@ commands:
   sethome:
     description: Set a home at your current location.
     usage: /sethome <number>
-    permission: simplehomes.use
+    permission: simplehomes.sethome
     permission-message: You do not have access to this command.
   home:
     description: Teleport to a saved home.
     usage: /home <number>
-    permission: simplehomes.use
+    permission: simplehomes.home
     permission-message: You do not have access to this command.
   delhome:
     description: Delete a saved home.
     usage: /delhome <number>
-    permission: simplehomes.use
+    permission: simplehomes.delhome
     permission-message: You do not have access to this command.
   homeadmin:
     description: Admin commands to manage homes for other players.
     usage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>
-    permission: simplehomes.admin
+    permission: simplehomes.homeadmin.show
     permission-message: You do not have access to this command.
 permissions:
-  simplehomes.use:
-    description: Allows use of Player Commands
+  simplehomes.player:
+    description: Allows use of all Player Commands
     default: true
+    children:
+      simplehomes.sethome: true
+      simplehomes.home: true
+      simplehomes.delhome: true
+  simplehomes.sethome:
+    description: Allows use of the SetHome Command
+    default: true
+  simplehomes.home:
+    description: Allows use of the Home Command
+    default: true
+  simplehomes.delhome:
+    description: Allows use of the DelHome Command
+    default: true
+
   simplehomes.admin:
-    description: Allows use of Admin Commands and bypassing Home-Limits
+    description: Allows use of Admin Commands
+    default: op
+    children:
+      simplehomes.homeadmin: true
+  simplehomes.homeadmin:
+    description: Allows use of all HomeAdmin Commands
+    default: op
+    children:
+      simplehomes.homeadmin.sethome: true
+      simplehomes.homeadmin.home: true
+      simplehomes.homeadmin.delhome: true
+      simplehomes.homeadmin.maxhomes: true
+      simplehomes.homeadmin.show: true
+  simplehomes.homeadmin.sethome:
+    description: Allows use of the HomeAdmin SetHome Command
+    default: op
+    children:
+      simplehomes.homeadmin.show: true
+  simplehomes.homeadmin.home:
+    description: Allows use of the HomeAdmin Home Command
+    default: op
+    children:
+      simplehomes.homeadmin.show: true
+  simplehomes.homeadmin.delhome:
+    description: Allows use of the HomeAdmin DelHome Command
+    default: op
+    children:
+      simplehomes.homeadmin.show: true
+  simplehomes.homeadmin.maxhomes:
+    description: Allows use of the HomeAdmin MaxHomes Command
+    default: op
+    children:
+      simplehomes.homeadmin.show: true
+  simplehomes.homeadmin.show:
+    description: Allows use of the HomeAdmin Command
+    default: op
+
+  simplehomes.bypasshomelimit:
+    description: Allows bypassing Home-Limits
     default: op

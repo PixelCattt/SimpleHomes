@@ -38,7 +38,7 @@ public class CommandHandler implements CommandExecutor {
 
         switch (cmd) {
             case "sethome":
-                if (!player.hasPermission("simplehomes.use")) {
+                if (!player.hasPermission("simplehomes.sethome")) {
                     player.sendMessage("§cYou don’t have permission to use this command.");
                     return true;
                 }
@@ -49,7 +49,7 @@ public class CommandHandler implements CommandExecutor {
                 return handleSetHome(player, args[0]);
 
             case "home":
-                if (!player.hasPermission("simplehomes.use")) {
+                if (!player.hasPermission("simplehomes.home")) {
                     player.sendMessage("§cYou don’t have permission to use this command.");
                     return true;
                 }
@@ -60,7 +60,7 @@ public class CommandHandler implements CommandExecutor {
                 return handleHome(player, args[0]);
 
             case "delhome":
-                if (!player.hasPermission("simplehomes.use")) {
+                if (!player.hasPermission("simplehomes.delhome")) {
                     player.sendMessage("§cYou don’t have permission to use this command.");
                     return true;
                 }
@@ -71,7 +71,7 @@ public class CommandHandler implements CommandExecutor {
                 return handleDelHome(player, args[0]);
 
             case "homeadmin":
-                if (!player.hasPermission("simplehomes.admin")) {
+                if (!player.hasPermission("simplehomes.homeadmin.show")) {
                     player.sendMessage("§cYou don’t have permission to use this command.");
                     return true;
                 }
@@ -82,7 +82,7 @@ public class CommandHandler implements CommandExecutor {
                 return handleHomeAdmin(player, args);
 
             default:
-                return false;
+                return true;
         }
     }
 
@@ -98,9 +98,9 @@ public class CommandHandler implements CommandExecutor {
             return false;
         }
 
-        if (!player.hasPermission("simplehomes.admin")) {
+        if (!player.hasPermission("simplehomes.bypasshomelimit")) {
             if (homeNum < 1 || homeNum > maxHomes) {
-                player.sendMessage("§cYou can only set homes between 1 and " + maxHomes + ".");
+                player.sendMessage("§cYou can only set homes from 1 to " + maxHomes + ".");
                 return false;
             }
         }
@@ -128,9 +128,9 @@ public class CommandHandler implements CommandExecutor {
             return false;
         }
 
-        if (!player.hasPermission("simplehomes.admin")) {
+        if (!player.hasPermission("simplehomes.bypasshomelimit")) {
             if (homeNum < 1 || homeNum > maxHomes) {
-                player.sendMessage("§cYou can only use homes between 1 and " + maxHomes + ".");
+                player.sendMessage("§cYou can only use homes from 1 to " + maxHomes + ".");
                 return false;
             }
         }
@@ -167,9 +167,9 @@ public class CommandHandler implements CommandExecutor {
                 return false;
             }
 
-            if (!player.hasPermission("simplehomes.admin")) {
+            if (!player.hasPermission("simplehomes.bypasshomelimit")) {
                 if (homeNum < 1 || homeNum > maxHomes) {
-                    player.sendMessage("§cYou can only delete homes between 1 and " + maxHomes + ".");
+                    player.sendMessage("§cYou can only delete homes from 1 to " + maxHomes + ".");
                     return false;
                 }
             }
@@ -190,6 +190,40 @@ public class CommandHandler implements CommandExecutor {
         String action = args[0].toLowerCase();
         String targetName = args[1];
         String numberStr = args[2];
+
+        switch (action) {
+            case "sethome":
+                if (!sender.hasPermission("simplehomes.homeadmin.sethome")) {
+                    sender.sendMessage("§cYou don’t have permission to use this command.");
+                    return true;
+                }
+                break;
+
+            case "home":
+                if (!sender.hasPermission("simplehomes.homeadmin.home")) {
+                    sender.sendMessage("§cYou don’t have permission to use this command.");
+                    return true;
+                }
+                break;
+
+            case "delhome":
+                if (!sender.hasPermission("simplehomes.homeadmin.delhome")) {
+                    sender.sendMessage("§cYou don’t have permission to use this command.");
+                    return true;
+                }
+                break;
+
+            case "maxhomes":
+                if (!sender.hasPermission("simplehomes.homeadmin.maxhomes")) {
+                    sender.sendMessage("§cYou don’t have permission to use this command.");
+                    return true;
+                }
+                break;
+
+            default:
+                sender.sendMessage("§cUsage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>");
+                return false;
+        }
 
         UUID targetUUID = UUID.fromString("00000000-0000-0000-0000-000000000000");
         if (targetName.equals("*")) {

@@ -37,7 +37,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 return autocompleteExistingHomes(uuid, args);
 
             case "homeadmin":
-                return autocompleteHomeAdmin(args);
+                return autocompleteHomeAdmin((Player) sender, args);
 
             default:
                 return Collections.emptyList();
@@ -76,13 +76,25 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
         return Collections.emptyList();
     }
 
-    private List<String> autocompleteHomeAdmin(String[] args) {
+    private List<String> autocompleteHomeAdmin(Player sender, String[] args) {
         if (args.length == 1) {
-            List<String> subcommands = Arrays.asList("sethome", "home", "delhome", "maxhomes");
+            List<String> subcommands = new ArrayList<>();
+
+            if (sender.hasPermission("simplehomes.homeadmin.sethome")) subcommands.add("sethome");
+            if (sender.hasPermission("simplehomes.homeadmin.home")) subcommands.add("home");
+            if (sender.hasPermission("simplehomes.homeadmin.delhome")) subcommands.add("delhome");
+            if (sender.hasPermission("simplehomes.homeadmin.maxhomes")) subcommands.add("maxhomes");
+
             return filterByPrefix(subcommands, args[0]);
         }
         if (args.length == 2) {
+            String subcommand = args[0].toLowerCase();
             String prefix = args[1].toLowerCase();
+
+            if (!sender.hasPermission("simplehomes.homeadmin." + subcommand)) {
+                return Collections.emptyList();
+            }
+
             List<String> playerNames = new ArrayList<>();
 
             for (Player p : Bukkit.getOnlinePlayers()) {
@@ -98,7 +110,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                     playerNames.add(name);
                 }
             }
-        
+
             return filterByPrefix(playerNames, prefix);
         }
         if (args.length == 3) {
@@ -106,6 +118,10 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             String targetName = args[1];
             Player target = Bukkit.getPlayerExact(targetName);
             UUID targetUUID;
+
+            if (!sender.hasPermission("simplehomes.homeadmin." + subcommand)) {
+                return Collections.emptyList();
+            }
 
             if (target != null) {
                 targetUUID = target.getUniqueId();
@@ -124,14 +140,12 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 List<String> possible = new ArrayList<>();
 
                 if (subcommand.equals("sethome")) {
-                    // autocomplete only unset homes for the target player
                     for (int i = 1; i <= Math.min(maxHomes, 50); i++) {
                         if (!existing.contains(i)) {
                             possible.add(String.valueOf(i));
                         }
                     }
                 } else {
-                    // autocomplete only existing homes for the target player
                     possible = existing.stream()
                             .filter(n -> n >= 1 && n <= Math.min(maxHomes, 50))
                             .map(String::valueOf)
