@@ -3,19 +3,24 @@
   
   <h1>SimpleHomes</h1>
   <a href="https://modrinth.com/plugin/simple_homes/versions">
+    <img src="https://img.shields.io/modrinth/v/simple_homes?style=for-the-badge&label=Version&color=5A00FF">
     <img src="https://img.shields.io/modrinth/dt/simple_homes?style=for-the-badge&label=Downloads&color=29A100">
   </a>
 </div>
 
 
 ## 🎯 Features
-- **Easily set Homes**
+- **Easily set Homes**  
 Players can set, teleport to, and delete their own homes, making navigation and survival much more convenient.
 
-- **Admin Home Management**
+####
+
+- **Admin Home Management**  
 Admins can set, teleport to, delete, and adjust the max number of homes for any player, giving full control when assisting or moderating.
 
-- **Customizable Home Limits**
+####
+
+- **Customizable Home Limits**  
 Define how many homes players can set by default, keeping balance between convenience and fairness on your server.
 
 
