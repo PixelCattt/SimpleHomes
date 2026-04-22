@@ -20,7 +20,7 @@ commands:
     permission-message: You do not have access to this command.
   homeadmin:
     description: Admin commands to manage homes for other players.
-    usage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>
+    usage: /homeadmin <sethome|home|info|delhome|maxhomes> <player> <number>
     permission: simplehomes.homeadmin.show
     permission-message: You do not have access to this command.
 permissions:
@@ -52,6 +52,7 @@ permissions:
     children:
       simplehomes.homeadmin.sethome: true
       simplehomes.homeadmin.home: true
+      simplehomes.homeadmin.info: true
       simplehomes.homeadmin.delhome: true
       simplehomes.homeadmin.maxhomes: true
       simplehomes.homeadmin.show: true
@@ -62,6 +63,11 @@ permissions:
       simplehomes.homeadmin.show: true
   simplehomes.homeadmin.home:
     description: Allows use of the HomeAdmin Home Command
+    default: op
+    children:
+      simplehomes.homeadmin.show: true
+  simplehomes.homeadmin.info:
+    description: Allows use of the HomeAdmin Info Command
     default: op
     children:
       simplehomes.homeadmin.show: true

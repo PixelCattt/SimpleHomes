@@ -7,7 +7,7 @@
 # Must be a Number from 1-50
 max-homes: 3
 
-# If Admins should be able to teleport to Homes instantly when using /homeadmin (Standard: true)
+# If Admins should be able to teleport to Homes instantly when using /homeadmin home (Standard: true)
 # Must be true or false
 admin-tp-delay: true
 

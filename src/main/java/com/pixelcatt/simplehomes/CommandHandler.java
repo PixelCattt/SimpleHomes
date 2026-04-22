@@ -76,7 +76,7 @@ public class CommandHandler implements CommandExecutor {
                     return true;
                 }
                 if (args.length != 3) {
-                    player.sendMessage("Usage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>");
+                    player.sendMessage("Usage: /homeadmin <sethome|home|info|delhome|maxhomes> <player> <number>");
                     return true;
                 }
                 return handleHomeAdmin(player, args);
@@ -206,6 +206,13 @@ public class CommandHandler implements CommandExecutor {
                 }
                 break;
 
+            case "info":
+                if (!sender.hasPermission("simplehomes.homeadmin.info")) {
+                    sender.sendMessage("§cYou don’t have permission to use this command.");
+                    return true;
+                }
+                break;
+
             case "delhome":
                 if (!sender.hasPermission("simplehomes.homeadmin.delhome")) {
                     sender.sendMessage("§cYou don’t have permission to use this command.");
@@ -221,7 +228,7 @@ public class CommandHandler implements CommandExecutor {
                 break;
 
             default:
-                sender.sendMessage("§cUsage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>");
+                sender.sendMessage("§cUsage: /homeadmin <sethome|home|info|delhome|maxhomes> <player> <number>");
                 return false;
         }
 
@@ -295,6 +302,37 @@ public class CommandHandler implements CommandExecutor {
                 teleportTasksAdmin.put(sender.getUniqueId(), task);
                 break;
 
+            case "info":
+                Location homeLoc = manager.getHome(targetUUID, number);
+                if (homeLoc == null) {
+                    sender.sendMessage("§cHome " + number + " does not exist for " + targetName + ".");
+                    return false;
+                }
+
+                String worldName;
+                switch (homeLoc.getWorld().getName()) {
+                    case "world":
+                        worldName = "The Overworld";
+                        break;
+                    case "world_nether":
+                        worldName = "The Nether";
+                        break;
+                    case "world_the_end":
+                        worldName = "The End";
+                        break;
+                    default:
+                        worldName = homeLoc.getWorld().getName();
+                        break;
+                }
+
+                sender.sendMessage("§aInformation for Home " + number + " of " + targetName + ":" +
+                        "\n§9World: §c" + worldName +
+                        "\n§9X: §c" + Math.floor(homeLoc.getX()) +
+                        "\n§9Y: §c" + Math.floor(homeLoc.getY()) +
+                        "\n§9Z: §c" + Math.floor(homeLoc.getZ())
+                );
+                break;
+
             case "delhome":
                 if (targetName.equals("*")) {
                     if (numberStr.equals("*")) {
@@ -331,7 +369,7 @@ public class CommandHandler implements CommandExecutor {
                 break;
 
             default:
-                sender.sendMessage("§cUsage: /homeadmin <sethome|home|delhome|maxhomes> <player> <number>");
+                sender.sendMessage("§cUsage: /homeadmin <sethome|home|info|delhome|maxhomes> <player> <number>");
                 return false;
         }
 

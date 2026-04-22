@@ -38,6 +38,7 @@ Define how many homes players can set by default, keeping balance between conven
 ```
 /homeadmin sethome <player> <number> - Set another Player's Home
 /homeadmin home <player> <number> - Teleport to another Player's Home
+/homeadmin info <player> <number> - Get Information about another Player's Home
 /homeadmin delhome <player> <number> - Delete another Player's Home
 /homeadmin maxhomes <player> <number> - Set the Maximum Number of Homes a Player can set
 ```

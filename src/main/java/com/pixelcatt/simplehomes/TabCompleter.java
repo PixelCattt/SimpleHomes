@@ -82,6 +82,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
             if (sender.hasPermission("simplehomes.homeadmin.sethome")) subcommands.add("sethome");
             if (sender.hasPermission("simplehomes.homeadmin.home")) subcommands.add("home");
+            if (sender.hasPermission("simplehomes.homeadmin.info")) subcommands.add("info");
             if (sender.hasPermission("simplehomes.homeadmin.delhome")) subcommands.add("delhome");
             if (sender.hasPermission("simplehomes.homeadmin.maxhomes")) subcommands.add("maxhomes");
 
@@ -134,7 +135,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
             if (subcommand.equals("maxhomes")) {
                 int maxHomes = manager.getMaxHomes(targetUUID);
                 return Collections.singletonList(String.valueOf(maxHomes));
-            } else if (Arrays.asList("sethome", "home", "delhome").contains(subcommand)) {
+            } else if (Arrays.asList("sethome", "home", "info", "delhome").contains(subcommand)) {
                 int maxHomes = manager.getMaxHomes(targetUUID);
                 Set<Integer> existing = manager.getHomeNumbers(targetUUID);
                 List<String> possible = new ArrayList<>();
