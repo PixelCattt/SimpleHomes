@@ -1,4 +1,4 @@
-package com.flummidill.simplehomes;
+package com.pixelcatt.simplehomes;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -21,7 +21,7 @@ public class SimpleHomes extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("~ Created by Flummidill ~");
+        getLogger().info("~ Created by PixelCatt ~");
 
         // Initialize Home-Manager
         getLogger().info("Initializing Home-Manager...");

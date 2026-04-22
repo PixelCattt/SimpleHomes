@@ -1,6 +1,6 @@
 # # # # # # # # # # # # # # #
 # SimpleHomes Configuration #
-#       By Flummidill       #
+#       By  PixelCatt       #
 # # # # # # # # # # # # # # #
 
 # The default number of Homes allowed for Players (Standard: 3)
@@ -10,6 +10,7 @@ max-homes: 3
 # If Admins should be able to teleport to Homes instantly when using /homeadmin (Standard: true)
 # Must be true or false
 admin-tp-delay: true
+
 
 # The Config Version
 # Do not change this Value

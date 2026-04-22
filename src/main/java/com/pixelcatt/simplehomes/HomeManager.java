@@ -1,4 +1,4 @@
-package com.flummidill.simplehomes;
+package com.pixelcatt.simplehomes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

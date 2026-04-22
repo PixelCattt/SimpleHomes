@@ -1,4 +1,4 @@
-package com.flummidill.simplehomes;
+package com.pixelcatt.simplehomes;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -83,7 +83,7 @@ public class JoinListener implements Listener {
             Text2.setUnderlined(true);
             Text2.setClickEvent(new ClickEvent(
                 ClickEvent.Action.OPEN_URL,
-                "https://github.com/Flummidill/SimpleHomes/releases/latest"
+                "https://modrinth.com/plugin/simple_homes/versions"
             ));
             message2.addExtra(Text2);
 

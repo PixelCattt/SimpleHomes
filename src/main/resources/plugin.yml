@@ -1,7 +1,7 @@
 name: SimpleHomes
-main: com.flummidill.simplehomes.SimpleHomes
+main: com.pixelcatt.simplehomes.SimpleHomes
 version: ${project.version}
-api-version: 1.13
+api-version: 1.21
 commands:
   sethome:
     description: Set a home at your current location.
