@@ -2,6 +2,7 @@ name: SimpleHomes
 main: com.pixelcatt.simplehomes.SimpleHomes
 version: ${project.version}
 api-version: 1.21
+depend: [OfflinePlayerLib]
 commands:
   sethome:
     description: Set a home at your current location.

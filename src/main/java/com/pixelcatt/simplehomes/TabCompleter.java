@@ -77,6 +77,7 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
     }
 
     private List<String> autocompleteHomeAdmin(Player sender, String[] args) {
+        plugin.refreshOfflinePlayerNames();
         if (args.length == 1) {
             List<String> subcommands = new ArrayList<>();
 
@@ -105,8 +106,8 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
                 }
             }
 
-            List<String> offlinePlayerNames = manager.getOfflinePlayerNameList();
-            for (String name : offlinePlayerNames) {
+            plugin.refreshOfflinePlayerNames();
+            for (String name : plugin.getOfflinePlayerNames().values()) {
                 if (!playerNames.contains(name)) {
                     playerNames.add(name);
                 }
@@ -126,10 +127,11 @@ public class TabCompleter implements org.bukkit.command.TabCompleter {
 
             if (target != null) {
                 targetUUID = target.getUniqueId();
-            } else if (manager.getOfflinePlayerUUID(targetName) != null) {
-                targetUUID = manager.getOfflinePlayerUUID(targetName);
             } else {
-                return Collections.emptyList();
+                targetUUID = plugin.getOfflinePlayerNames().entrySet().stream()
+                        .filter(entry -> entry.getValue().equalsIgnoreCase(targetName))
+                        .map(Map.Entry::getKey).findFirst().orElse(null);
+                if (targetUUID == null) return Collections.emptyList();
             }
 
             if (subcommand.equals("maxhomes")) {

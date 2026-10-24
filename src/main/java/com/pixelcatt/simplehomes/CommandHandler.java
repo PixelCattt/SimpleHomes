@@ -34,7 +34,6 @@ public class CommandHandler implements CommandExecutor {
 
         String cmd = command.getName().toLowerCase();
 
-        manager.saveOfflinePlayer(player.getUniqueId(), player.getName());
 
         switch (cmd) {
             case "sethome":
@@ -239,18 +238,22 @@ public class CommandHandler implements CommandExecutor {
                 return false;
             }
         } else {
-            Player target = Bukkit.getPlayerExact(targetName);
-            if (target != null) {
-                targetUUID = target.getUniqueId();
-            } else if (manager.getOfflinePlayerUUID(targetName) != null) {
-                targetUUID = manager.getOfflinePlayerUUID(targetName);
-            } else {
-                sender.sendMessage("§cPlayer '" + targetName + "' not found.");
-                return false;
-            }
-
-            targetName = manager.getOfflinePlayerName(targetUUID);
+            String requestedName = targetName;
+            plugin.getOfflinePlayerLib().GetOfflinePlayerByName(requestedName).thenAccept(target -> {
+                if (target == null) {
+                    sender.sendMessage("§cPlayer '" + requestedName + "' not found.");
+                    return;
+                }
+                executeHomeAdmin(sender, action, target.getUniqueId(), target.getName(), numberStr);
+            });
+            return true;
         }
+
+        executeHomeAdmin(sender, action, targetUUID, targetName, numberStr);
+        return true;
+    }
+
+    private boolean executeHomeAdmin(Player sender, String action, UUID targetUUID, String targetName, String numberStr) {
 
         int number = -1;
         if (numberStr.equals("*")) {
@@ -327,9 +330,9 @@ public class CommandHandler implements CommandExecutor {
 
                 sender.sendMessage("§aInformation for Home " + number + " of " + targetName + ":" +
                         "\n§9World: §c" + worldName +
-                        "\n§9X: §c" + Math.floor(homeLoc.getX()) +
-                        "\n§9Y: §c" + Math.floor(homeLoc.getY()) +
-                        "\n§9Z: §c" + Math.floor(homeLoc.getZ())
+                        "\n§9X: §c" + (int) homeLoc.getX() +
+                        "\n§9Y: §c" + (int) homeLoc.getY() +
+                        "\n§9Z: §c" + (int) homeLoc.getZ()
                 );
                 break;
 

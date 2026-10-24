@@ -1,5 +1,7 @@
 package com.pixelcatt.simplehomes;
 
+import com.pixelcatt.offlineplayerlib.CachedOfflinePlayer;
+import com.pixelcatt.offlineplayerlib.OfflinePlayerLib;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.json.JSONArray;
@@ -11,17 +13,25 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class SimpleHomes extends JavaPlugin {
 
     private HomeManager manager;
     private JoinListener joinListener;
+    private OfflinePlayerLib offlinePlayerLib;
+    private final Map<UUID, String> offlinePlayerNames = new ConcurrentHashMap<>();
+    private volatile long offlinePlayerNamesLastRefresh;
 
 
     @Override
     public void onEnable() {
         getLogger().info("~ Created by PixelCatt ~");
+        offlinePlayerLib = (OfflinePlayerLib) getServer().getPluginManager().getPlugin("OfflinePlayerLib");
+        refreshOfflinePlayerNames();
 
         // Initialize Home-Manager
         getLogger().info("Initializing Home-Manager...");
@@ -76,7 +86,6 @@ public class SimpleHomes extends JavaPlugin {
 
         if ("1.0.0".equals(configVersion)) {
             getLogger().info("Configuration Update: \"config-version\" has been updated to \"" + currentVersion + "\".");
-            manager.updatePlugin();
             configVersion = currentVersion;
         } else if (isNewerVersion(configVersion, "1.0.0")) {
             if (isOlderVersion(configVersion, currentVersion)) {
@@ -90,6 +99,21 @@ public class SimpleHomes extends JavaPlugin {
         config.set("config-version", configVersion);
 
         saveConfig();
+    }
+
+    public OfflinePlayerLib getOfflinePlayerLib() { return offlinePlayerLib; }
+
+    public Map<UUID, String> getOfflinePlayerNames() { return Map.copyOf(offlinePlayerNames); }
+
+    public void refreshOfflinePlayerNames() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - offlinePlayerNamesLastRefresh < 5000) return;
+        offlinePlayerNamesLastRefresh = currentTime;
+        offlinePlayerLib.GetAllOfflinePlayers().thenAccept(players -> {
+            for (CachedOfflinePlayer player : players) {
+                if (player.getName() != null) offlinePlayerNames.put(player.getUniqueId(), player.getName());
+            }
+        });
     }
 
     private void registerCommands() {

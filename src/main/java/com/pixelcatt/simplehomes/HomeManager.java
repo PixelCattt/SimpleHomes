@@ -60,34 +60,12 @@ public class HomeManager {
                     "home_limit INTEGER NOT NULL," +
                     "PRIMARY KEY(uuid))");
 
-            // Offline-Players Table
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS offline_players (" +
-                    "uuid TEXT NOT NULL," +
-                    "plr_name TEXT NOT NULL UNIQUE," +
-                    "PRIMARY KEY(uuid))");
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to create tables in SQLite database.");
             e.printStackTrace();
         }
     }
 
-    public void updatePlugin() {
-        try (Statement stmt = connection.createStatement()) {
-            plugin.getLogger().info("Updating DB-Table offline_players to Version 1.1.0");
-
-            // Delete Old Table
-            stmt.executeUpdate("DROP TABLE IF EXISTS offline_players");
-
-            // Create New Table
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS offline_players (" +
-                "uuid TEXT NOT NULL," +
-                "plr_name TEXT NOT NULL UNIQUE," +
-                "PRIMARY KEY(uuid))");
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to create tables in SQLite database.");
-            e.printStackTrace();
-        }
-    }
 
     public int getMaxHomes(UUID uuid) {
         try (PreparedStatement ps = connection.prepareStatement("SELECT home_limit FROM home_limits WHERE uuid = ?")) {
@@ -248,104 +226,6 @@ public class HomeManager {
                         rs.getDouble("z"),
                         (float) rs.getDouble("yaw"),
                         (float) rs.getDouble("pitch"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void saveOfflinePlayer(UUID uuid, String playerName) {
-        try {
-            // Check If UUID already exists
-            boolean uuidExists = false;
-            PreparedStatement ps1 = connection.prepareStatement(
-                "SELECT 1 FROM offline_players WHERE uuid = ? LIMIT 1");
-            ps1.setString(1, uuid.toString());
-            ResultSet rs1 = ps1.executeQuery();
-            if (rs1.next()) {
-                uuidExists = true;
-            }
-
-            // Check If the Player Name already exists
-            boolean nameExists = false;
-            PreparedStatement ps2 = connection.prepareStatement(
-                "SELECT 1 FROM offline_players WHERE plr_name = ? LIMIT 1");
-            ps2.setString(1, playerName);
-            ResultSet rs2 = ps2.executeQuery();
-            if (rs2.next()) {
-                nameExists = true;
-            }
-
-
-            // Delete Row with UUID if uuidExists = true
-            if (uuidExists) {
-                PreparedStatement ps3 = connection.prepareStatement(
-                    "DELETE FROM offline_players WHERE uuid = ?");
-                ps3.setString(1, uuid.toString());
-                ps3.executeUpdate();
-            }
-
-            // Delete Row with Name if nameExists = true
-            if (nameExists) {
-                PreparedStatement ps4 = connection.prepareStatement(
-                    "DELETE FROM offline_players WHERE plr_name = ?");
-                ps4.setString(1, playerName);
-                ps4.executeUpdate();
-            }
-
-
-            // Insert new UUID and Name
-            PreparedStatement ps5 = connection.prepareStatement(
-                    "REPLACE INTO offline_players(uuid, plr_name) VALUES (?, ?)");
-            ps5.setString(1, uuid.toString());
-            ps5.setString(2, playerName);
-            ps5.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public List<String> getOfflinePlayerNameList() {
-        List<String> list = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement("SELECT DISTINCT plr_name FROM offline_players")) {
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                String name = rs.getString("plr_name");
-                if (name != null) {
-                    list.add(name);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return list;
-    }
-
-    public UUID getOfflinePlayerUUID(String playerName) {
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM offline_players WHERE plr_name = ?")) {
-            ps.setString(1, playerName);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                String uuid = rs.getString("uuid");
-                if (uuid != null) {
-                    return UUID.fromString(uuid);
-                } else {
-                    return null;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public String getOfflinePlayerName(UUID uuid) {
-        try (PreparedStatement ps = connection.prepareStatement("SELECT * FROM offline_players WHERE uuid = ?")) {
-            ps.setString(1, uuid.toString());
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return rs.getString("plr_name");
             }
         } catch (SQLException e) {
             e.printStackTrace();
